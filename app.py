@@ -1,240 +1,717 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import matplotlib.pyplot as plt
+from datetime import datetime
 
 # Configuración de la página
 st.set_page_config(
-    page_title="Cotizador de Equipos Proservices",
+    page_title="Cotizador Proservices",
     page_icon="💰",
     layout="wide"
 )
 
-# Datos directamente en el código (extraídos de tu Excel)
-data = [
-    # PGIC
+# =================================================================================
+# MATRIZ DE MÁRGENES ACTUALIZADA (2024)
+# =================================================================================
+MARGENES = [
+    {"Tramo": "$200.000 – $399.999", "Min": 200000, "Max": 399999, "Margen": 0.22},
+    {"Tramo": "$400.000 – $999.999", "Min": 400000, "Max": 999999, "Margen": 0.19},
+    {"Tramo": "$1.000.000 – $1.999.999", "Min": 1_000_000, "Max": 1_999_999, "Margen": 0.185},
+    {"Tramo": "$2.000.000 – $2.999.999", "Min": 2_000_000, "Max": 2_999_999, "Margen": 0.18},
+    {"Tramo": "$3.000.000 – $4.999.999", "Min": 3_000_000, "Max": 4_999_999, "Margen": 0.175},
+    {"Tramo": "SOBRE 5.000.000", "Min": 5_000_000, "Max": float("inf"), "Margen": 0.17}
+]
+
+# =================================================================================
+# DATOS COMPLETOS DE TODOS LOS PROVEEDORES (CON TODOS LOS MODELOS)
+# =================================================================================
+PROVEEDORES = [
+    # =============================================
+    # PGIC (Todos los modelos completos)
+    # =============================================
     {
-        "Proveedor": "PGIC", "Marca": "STAIRS", "Línea de Producto": "Bombas multietapas horizontales inox AISI 304",
-        "Modelo Base": "MXHM / MXH", "Categoría Producto": "Bomba Superficie Inox", "Procedencia": "China",
-        "% Desc. Proveedor": 0.4, "Forma de Pago": "Cheques 60 días", 
-        "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques", "Garantía": "1 año",
-        "Buscar Precio en": "App PGIC", "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189",
+        "Proveedor": "PGIC", "Marca": "CALPEDA", 
+        "Línea de Producto": "Bombas multietapa horizontal inox AISI 304",
+        "Modelo Base": "MXHM / MXH", "Procedencia": "Italia", "% Desc. Proveedor": 0.38,
+        "Forma de Pago": "Cheques 60 días", "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques",
+        "Garantía": "1 año", "Buscar Precio en": "App PGIC", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "1 día hábil",
+        "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189",
         "Email": "vcanales@pgic.cl", "Web/App proveedor": "https://b2b.pgic.cl",
-        "Teléfono Oficina/ Sino hay respuesta del vendedor": "+56 2 1234 5678",
-        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Ver precios en app PGIC"
+        "Teléfono Oficina": "+56 2 1234 5678",
+        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24"
     },
     {
-        "Proveedor": "PGIC", "Marca": "STAIRS", "Línea de Producto": "Bombas sumergibles pozo profundo",
-        "Modelo Base": "6SP / 4SP / 8SP", "Categoría Producto": "Bomba Sumergible", "Procedencia": "China",
-        "% Desc. Proveedor": 0.38, "Forma de Pago": "Cheques 60 días", 
-        "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques", "Garantía": "1 año",
-        "Buscar Precio en": "App PGIC", "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189",
-        "Email": "vcanales@pgic.cl", "Web/App proveedor": "https://b2b.pgic.cl",
-        "Teléfono Oficina/ Sino hay respuesta del vendedor": "+56 2 1234 5678",
-        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Ver precios en app PGIC"
+        "Proveedor": "PGIC", "Marca": "STAIRS", 
+        "Línea de Producto": "Bombas sumergibles pozo profundo",
+        "Modelo Base": "6SP / 4ST / 8SP", "Procedencia": "China", "% Desc. Proveedor": 0.38,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC", 
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000, 
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
     },
-    # KOSLAN
     {
-        "Proveedor": "KOSLAN", "Marca": "PEDROLLO", "Línea de Producto": "Bombas superficie / pozo / drenaje",
-        "Modelo Base": "VARIOS", "Categoría Producto": "Bombas Superficie y Sumergibles", "Procedencia": "Italia",
-        "% Desc. Proveedor": 0.38, "Forma de Pago": "Cheque / Transferencia 30 días", 
-        "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques", "Garantía": "3 años",
-        "Buscar Precio en": "App Koslan", "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días habiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Proveedor": "PGIC", "Marca": "STAIRS", 
+        "Línea de Producto": "Bombas multietapa vertical inox AISI 304",
+        "Modelo Base": "SB / SBI", "Procedencia": "China", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "2 años", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0190"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "AQUASYSTEM", 
+        "Línea de Producto": "Estanques hidroneumáticos",
+        "Modelo Base": "VERTICAL / HORIZONTAL / 10BAR /16BAR", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "MEUDY", 
+        "Línea de Producto": "Bombas sumergibles para lodo / contratistas",
+        "Modelo Base": "FSM/ KSM /KBZ /KBS/ KBD", "Procedencia": "China", "% Desc. Proveedor": 0.35,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "MEUDY", 
+        "Línea de Producto": "Bombas sumergibles aguas servidas",
+        "Modelo Base": "U / C /B /G", "Procedencia": "China", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "BESTFLOW", 
+        "Línea de Producto": "Bombas de pozo / superficie / Variadores y tableros eléctricos",
+        "Modelo Base": "VFD / TBF / STAR", "Procedencia": "China", "% Desc. Proveedor": 0.35,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "DRENO", 
+        "Línea de Producto": "Bombas para aguas servidas y drenaje",
+        "Modelo Base": "AM / AT /COMPATTA", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "FRANKLIN", 
+        "Línea de Producto": "Motores sumergibles y bombas STAIRS by Franklin",
+        "Modelo Base": "4FM / 6FM", "Procedencia": "EE.UU.", "% Desc. Proveedor": 0.35,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "SUBLINE", 
+        "Línea de Producto": "Bombas sumergibles de pozo",
+        "Modelo Base": "FF / FS", "Procedencia": "Italia", "% Desc. Proveedor": 0.38,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "ELENTEK", 
+        "Línea de Producto": "Tableros eléctricos inteligentes y arrancadores",
+        "Modelo Base": "TABLEROS CONTROL ELECTRONICOS", "Procedencia": "Italia", "% Desc. Proveedor": 0.36,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "ULMAX", 
+        "Línea de Producto": "Bombas verticales multietapas / Variadores de frecuencia",
+        "Modelo Base": "UX / SVMT", "Procedencia": "China", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "REGGIO", 
+        "Línea de Producto": "Bombas centrífugas, multietapas, drenaje",
+        "Modelo Base": "SM / ST /CFM / STF /STO /SSBJ", "Procedencia": "Italia", "% Desc. Proveedor": 0.38,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "2 años", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "REGGIO", 
+        "Línea de Producto": "Bombas centrífugas Normalizadas",
+        "Modelo Base": "SN", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "2 años", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+
+    # =============================================
+    # KOSLAN (Todos los modelos completos)
+    # =============================================
+    {
+        "Proveedor": "KOSLAN", "Marca": "PEDROLLO", 
+        "Línea de Producto": "Bombas superficie",
+        "Modelo Base": "CPM / CP / 2CPM / HF / F", "Procedencia": "Italia", "% Desc. Proveedor": 0.43,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
         "Email": "vcampos@koslan.cl", "Web/App proveedor": "https://wap.koslan.cl/index.php",
-        "Teléfono Oficina/ Sino hay respuesta del vendedor": "+56 2 1234 5678",
         "Datos APP": "ID Cliente: 1739"
     },
-    # KSB
     {
-        "Proveedor": "KSB", "Marca": "KSB", "Línea de Producto": "Bombas Superficiales",
-        "Modelos / Descripción": "Grupo Motobomba Emporia PD, CC, HB", "Categoría Producto": "Bombas Superficiales", 
-        "Procedencia": "Alemania", "% Desc. Proveedor": 0.57, "Forma de Pago": "Crédito 30-60 días", 
-        "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques", "Garantía": "1 año",
-        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días habiles", "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
-        "Email": "Danny.Fuenmayor@ksb.com", 
-        "Web/App proveedor": "https://my.ksb.cl/login.jhtm?noMessage=t&forwardAction=https://my.ksb.cl/product.jhtm?id=1768&cid=",
-        "Teléfono Oficina/ Sino hay respuesta del vendedor": "+56 2 1234 5678",
+        "Proveedor": "KOSLAN", "Marca": "PEDROLLO", 
+        "Línea de Producto": "Bombas sumergible / pozo / aguas servidas / drenaje",
+        "Modelo Base": "4SR /4BLOCK /VX /MC", "Procedencia": "Italia", "% Desc. Proveedor": 0.46,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "PEDROLLO", 
+        "Línea de Producto": "Variadores y tableros eléctricos",
+        "Modelo Base": "Serie E1 / E2", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Datos APP": "Arrancadores y tableros configurables"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "FLOWMAK", 
+        "Línea de Producto": "Bombas agrícolas, periféricas y sumergibles/ válvulas",
+        "Modelo Base": "VARIOS", "Procedencia": "China", "% Desc. Proveedor": 0.38,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Datos APP": "Uso agrícola y domiciliario"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "RAIN", 
+        "Línea de Producto": "Válvulas solenoides, programadores",
+        "Modelo Base": "VARIOS", "Procedencia": "EE.UU.", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Datos APP": "Controladores de riego y electroválvulas"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "KOSLAN", 
+        "Línea de Producto": "Tableros eléctricos electronicos",
+        "Modelo Base": "DOMINO / SIMPLEX / DUPLEX", "Procedencia": "Chile", "% Desc. Proveedor": 0.38,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Datos APP": "Tableros armados a medida"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "ZENIT", 
+        "Línea de Producto": "Bombas aguas servidas industriales",
+        "Modelo Base": "GRBLUE / GRS /GRG / AP / UNIQA", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Datos APP": "Bombas trituradoras y de canal abierto"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "VAREM", 
+        "Línea de Producto": "Estanques hidroneumáticos",
+        "Modelo Base": "VERTICAL / HORIZONTAL / 10BAR /16BAR", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Datos APP": "Estanques verticales y horizontales certificados"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "LEO", 
+        "Línea de Producto": "Bombas sumergibles y de superficie, bombas solares/ variadores de frecuencia",
+        "Modelo Base": "LVS / LPP /PQ /3ACM /2ACM /AMS", "Procedencia": "China", "% Desc. Proveedor": 0.43,
+        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Datos APP": "Uso residencial y riego simple"
+    },
+
+    # =============================================
+    # KSB (Todos los modelos completos)
+    # =============================================
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Bombas Superficiales",
+        "Modelo Base": "Grupo Motobomba Emporia PD, CC, HB", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.57, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Email": "Danny.Fuenmayor@ksb.com", "Web/App proveedor": "https://my.ksb.cl",
         "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2025"
     },
-    # COSMOPLAS
     {
-        "Proveedor": "COSMOPLAS", "Marca": "PENTAX", "Línea de Producto": "Bombas periféricas",
-        "Modelos / Descripción": "PM45 / CB / CBM / CAM", "Procedencia": "Italia",
-        "% Desc. Proveedor": 0.51, "Forma de Pago": "Crédito 30-60 días", 
-        "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques", "Garantía": "1 año",
-        "Forma de cotizar": "Por WhatsApp o correo al vendedor", "Contacto Vendedor": "Camila Gómez / +56 9 5343 2057",
-        "Email": "cagomez@cosmoplas.com", "Web/App proveedor": "https://cosmoplas.cl",
-        "Instrucción de cotización": "Catálogo largo, enviar código", "Stock": "Confirmar stock"
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Bombas Superficiales",
+        "Modelo Base": "Grupo Motobomba Emporia CP, GS, GC, GR", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.57, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2026"
     },
-    # FRANKLIN
     {
-        "Proveedor": "FRANKLIN", "Marca": "Franklin", "Línea de Producto": "Kit bomba + motor (completo)",
-        "Modelos / Descripción": "Serie SS 4\", 6\", 8\", 10\", Fhoton, SubDrive", "Procedencia": "EE.UU.",
-        "% Desc. Proveedor": 0.5, "Forma de Pago": "Cheque 30 días", 
-        "Condición de pago por monto": "Confirmar según monto", "Garantía": "1 año",
-        "Forma de cotizar": "Por catálogo del proveedor", "Contacto Vendedor": "Enzo Garrido / +56 9 3262 2274",
-        "Email": "franklinchile@fele.com", "Web/App proveedor": "https://franklinwater.cl",
-        "Instrucción de cotización": "Catálogo Franklin PDF Nov 2024", "Stock": "Confirmar stock"
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Multietapas Verticales",
+        "Modelo Base": "Grupo Motobomba MOVITEC B, C", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.57, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2027"
     },
-    # HCP
     {
-        "Proveedor": "HCP", "Marca": "HCP", "Línea de Producto": "Aguas Servidas",
-        "Modelos / Descripción": "Serie AF", "Procedencia": "Taiwanesa",
-        "% Desc. Proveedor": 0.3, "Forma de Pago": "Cheque 30 días", 
-        "Condición de pago por monto": "Confirmar con ejecutivo", "Garantía": "1 año",
-        "Forma de cotizar": "Catálogo PDF + WhatsApp", "Contacto Vendedor": "Cristóbal Canales / +56 9 8770 7441",
-        "Email": "N/D", "Web/App proveedor": "N/D",
-        "Instrucción de cotización": "Enviar código del modelo", "Stock": "Confirmar stock"
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Bombas Normalizadas",
+        "Modelo Base": "MegaNorm", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.24, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2028"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Motores Alta Eficiencia",
+        "Modelo Base": "Motores IE3 B3", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.24, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2029"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Motores Premium IE4/IE5",
+        "Modelo Base": "SupremE", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.24, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2030"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Automatización",
+        "Modelo Base": "Pumpdrive R, Pumpdrive 2", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.52, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2031"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Agua Residual",
+        "Modelo Base": "Amarex N / ARX / KRT", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.52, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2032"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Accesorios de Montaje",
+        "Modelo Base": "Flanges y Bases", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.28, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "No",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9269",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2033"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Agua Residual",
+        "Modelo Base": "Clas / Clasvort / Drain Vort / Canal Bi", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.57, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9271",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2035"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Automatización",
+        "Modelo Base": "Hyamat V / PD / SPD", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.28, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9273",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2037"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Automatización",
+        "Modelo Base": "Delta Compact / Solo / Primo / Eco", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.52, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9274",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2038"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Válvulas Industriales",
+        "Modelo Base": "ECOLINE / PROFIT / HERA / SYSTO", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.57, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9275",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2039"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Accesorios",
+        "Modelo Base": "Flanges / Bases / Camisas / Cables", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.28, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "No",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9276",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2040"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Bombas Monobloc",
+        "Modelo Base": "Megabloc", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.30, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9277",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2041"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Motores Eléctricos",
+        "Modelo Base": "IE3 B3", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.24, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9278",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2042"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Motores Eléctricos",
+        "Modelo Base": "IE3 JM - Movitec", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.24, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9279",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2043"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Motores Rebobinables",
+        "Modelo Base": "UMA / UMC / UMA S", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.24, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9280",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2044"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Motores Encapsulados",
+        "Modelo Base": "COM / CWM / PD / PDM", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.24, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9281",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2045"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Bombas de Pozo",
+        "Modelo Base": "UPA 200 / 250 / 300 / 350", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.54, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9282",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2046"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Bombas de Pozo",
+        "Modelo Base": "Upachrom 75 CN / 100 CN / 150 CC / 200 CC", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.62, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9283",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2047"
+    },
+    {
+        "Proveedor": "KSB", "Marca": "KSB", 
+        "Línea de Producto": "Hidroneumáticos / Accesorios",
+        "Modelo Base": "Hidroneumáticos + kits / Acoplamientos / Cables", "Procedencia": "Alemania", 
+        "% Desc. Proveedor": 0.57, "Forma de Pago": "Crédito 30 días", "Garantía": "2 años",
+        "Buscar Precio en": "App KSB", "Descuento Extra > 1.5MM": "Sí",
+        "Monto Activación": 1500000, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "Danny Fuenmayor / +56 9 7451 9284",
+        "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: KIMBGON2048"
+    },
+
+    # =============================================
+    # COSMOPLAS (Todos los modelos completos)
+    # =============================================
+    {
+        "Proveedor": "COSMOPLAS", "Marca": "PENTAX", 
+        "Línea de Producto": "Bombas periféricas",
+        "Modelo Base": "PM45 / CB / CBM / CAM", "Procedencia": "Italia", "% Desc. Proveedor": 0.51,
+        "Forma de Pago": "Crédito 30-60 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Por WhatsApp o correo al vendedor",
+        "Contacto Vendedor": "Carlos Gómez / +56 9 5343 2057", "Email": "cagomez@cosmoplas.com",
+        "Web/App proveedor": "https://cosmoplas.cl", "Instrucción de cotización": "Catálogo largo, enviar código",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "COSMOPLAS", "Marca": "CNP", 
+        "Línea de Producto": "Bombas multietapas / centrífugas",
+        "Modelo Base": "CHLF / CDLF / ZS 50-32-160", "Procedencia": "China", "% Desc. Proveedor": "Cotizar",
+        "Forma de Pago": "Crédito 30-60 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Por WhatsApp o correo al vendedor",
+        "Contacto Vendedor": "Carlos Gómez / +56 9 5343 2057", "Email": "cagomez@cosmoplas.com",
+        "Web/App proveedor": "https://cosmoplas.cl", "Instrucción de cotización": "Catálogo largo, enviar código",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "COSMOPLAS", "Marca": "VAREM", 
+        "Línea de Producto": "Estanques hidroneumáticos / sanitarios",
+        "Modelo Base": "24L, 60L, 100L, 200L", "Procedencia": "Italia", "% Desc. Proveedor": "Cotizar",
+        "Forma de Pago": "Crédito 30-60 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Por WhatsApp o correo al vendedor",
+        "Contacto Vendedor": "Carlos Gómez / +56 9 5343 2057", "Email": "cagomez@cosmoplas.com",
+        "Web/App proveedor": "https://cosmoplas.cl", "Instrucción de cotización": "Catálogo largo, enviar código",
+        "Stock": "Confirmar stock"
+    },
+
+    # =============================================
+    # FRANKLIN (Todos los modelos completos)
+    # =============================================
+    {
+        "Proveedor": "FRANKLIN", "Marca": "Franklin", 
+        "Línea de Producto": "Kit bomba + motor (completo)",
+        "Modelo Base": "Serie SS 4\", 6\", 8\", 10\", Fhoton, SubDrive", "Procedencia": "EE.UU.", 
+        "% Desc. Proveedor": 0.50, "Forma de Pago": "Cheque 30 días", "Garantía": "1 año",
+        "Forma de cotizar": "Por catálogo del proveedor", 
+        "Contacto Vendedor": "Enzo Garrido / +56 9 3262 2274", "Email": "franklinchile@fele.com",
+        "Web/App proveedor": "https://franklinwater.cl", 
+        "Instrucción de cotización": "Catálogo Franklin PDF Nov 2024",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "FRANKLIN", "Marca": "Franklin", 
+        "Línea de Producto": "Motores y bombas por separado",
+        "Modelo Base": "Motores 4\", 6\", 8\", partes hidráulicas", "Procedencia": "EE.UU.", 
+        "% Desc. Proveedor": 0.45, "Forma de Pago": "Cheque 30 días", "Garantía": "1 año",
+        "Forma de cotizar": "Por catálogo del proveedor",
+        "Contacto Vendedor": "Enzo Garrido / +56 9 3262 2274", "Email": "franklinchile@fele.com",
+        "Instrucción de cotización": "Cotizar código exacto vía WhatsApp",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "FRANKLIN", "Marca": "Franklin", 
+        "Línea de Producto": "Sistemas de bombeo solar",
+        "Modelo Base": "Fhoton SolarPAK / SubDrive SolarPAK", "Procedencia": "EE.UU.", 
+        "% Desc. Proveedor": 0.50, "Forma de Pago": "Cheque 30 días", "Garantía": "1 año",
+        "Forma de cotizar": "Por catálogo del proveedor",
+        "Contacto Vendedor": "Enzo Garrido / +56 9 3262 2274", "Email": "franklinchile@fele.com",
+        "Instrucción de cotización": "Ingresar código del kit",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "FRANKLIN", "Marca": "Franklin", 
+        "Línea de Producto": "Motores sumergibles encapsulados",
+        "Modelo Base": "Motores 4\", 6\", 8\" encapsulados NEMA", "Procedencia": "EE.UU.", 
+        "% Desc. Proveedor": 0.45, "Forma de Pago": "Cheque 30 días", "Garantía": "1 año",
+        "Forma de cotizar": "Por catálogo del proveedor",
+        "Contacto Vendedor": "Enzo Garrido / +56 9 3262 2274", "Email": "franklinchile@fele.com",
+        "Instrucción de cotización": "Enviar parte exacta a cotizar",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "FRANKLIN", "Marca": "Franklin", 
+        "Línea de Producto": "Estanques hidroneumáticos",
+        "Modelo Base": "Acero pintado 24L, 60L, 100L, 200L", "Procedencia": "EE.UU.", 
+        "% Desc. Proveedor": "Cotizar", "Forma de Pago": "Cheque 30 días", "Garantía": "1 año",
+        "Forma de cotizar": "Por catálogo del proveedor",
+        "Contacto Vendedor": "Enzo Garrido / +56 9 3262 2274", "Email": "franklinchile@fele.com",
+        "Instrucción de cotización": "Confirmar SKU con vendedor",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "FRANKLIN", "Marca": "Franklin", 
+        "Línea de Producto": "Accesorios",
+        "Modelo Base": "Tableros, conectores, protecciones, sellos", "Procedencia": "EE.UU.", 
+        "% Desc. Proveedor": "Cotizar", "Forma de Pago": "Cheque 30 días", "Garantía": "1 año",
+        "Forma de cotizar": "Por catálogo del proveedor",
+        "Contacto Vendedor": "Enzo Garrido / +56 9 3262 2274", "Email": "franklinchile@fele.com",
+        "Instrucción de cotización": "Cotizar con SKU o descripción",
+        "Stock": "Confirmar stock"
+    },
+
+    # =============================================
+    # HCP (Todos los modelos completos)
+    # =============================================
+    {
+        "Proveedor": "HCP", "Marca": "HCP", 
+        "Línea de Producto": "Aguas Servidas",
+        "Modelo Base": "Serie AF", "Procedencia": "Taiwanesa", "% Desc. Proveedor": 0.30,
+        "Forma de Pago": "Cheque 30 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Catálogo PDF + WhatsApp",
+        "Contacto Vendedor": "Cristóbal Canales / +56 9 8770 7441", "Email": "N/D",
+        "Web/App proveedor": "N/D", "Instrucción de cotización": "Enviar código del modelo",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "HCP", "Marca": "HCP", 
+        "Línea de Producto": "Lodo / Sólidos",
+        "Modelo Base": "Serie LH / LH-C / LH-G / LH-L", "Procedencia": "Taiwanesa", "% Desc. Proveedor": 0.30,
+        "Forma de Pago": "Cheque 30 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Catálogo PDF + WhatsApp",
+        "Contacto Vendedor": "Cristóbal Canales / +56 9 8770 7441", "Email": "N/D",
+        "Instrucción de cotización": "Enviar código del modelo",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "HCP", "Marca": "HCP", 
+        "Línea de Producto": "Drenaje / Achique",
+        "Modelo Base": "Serie AS / ASP / AL", "Procedencia": "Taiwanesa", "% Desc. Proveedor": 0.30,
+        "Forma de Pago": "Cheque 30 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Catálogo PDF + WhatsApp",
+        "Contacto Vendedor": "Cristóbal Canales / +56 9 8770 7441", "Email": "N/D",
+        "Instrucción de cotización": "Enviar código del modelo",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "HCP", "Marca": "HCP", 
+        "Línea de Producto": "Trituradoras",
+        "Modelo Base": "Serie GR / GT", "Procedencia": "Taiwanesa", "% Desc. Proveedor": 0.30,
+        "Forma de Pago": "Cheque 30 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Catálogo PDF + WhatsApp",
+        "Contacto Vendedor": "Cristóbal Canales / +56 9 8770 7441", "Email": "N/D",
+        "Instrucción de cotización": "Enviar código del modelo",
+        "Stock": "Confirmar stock"
+    },
+    {
+        "Proveedor": "HCP", "Marca": "HCP", 
+        "Línea de Producto": "Contra incendios",
+        "Modelo Base": "Serie FC", "Procedencia": "Taiwanesa", "% Desc. Proveedor": 0.30,
+        "Forma de Pago": "Cheque 30 días", "Garantía": "1 año", 
+        "Forma de cotizar": "Catálogo PDF + WhatsApp",
+        "Contacto Vendedor": "Cristóbal Canales / +56 9 8770 7441", "Email": "N/D",
+        "Instrucción de cotización": "Enviar código del modelo",
+        "Stock": "Confirmar stock"
     }
 ]
 
 # Convertir a DataFrame
-df = pd.DataFrame(data)
+df_proveedores = pd.DataFrame(PROVEEDORES)
+df_margenes = pd.DataFrame(MARGENES)
 
-# Limpiar y estandarizar nombres de columnas
-df.columns = df.columns.str.strip()
+# =================================================================================
+# FUNCIONES PRINCIPALES
+# =================================================================================
+def calcular_margen(costo):
+    """Determina el margen basado en los nuevos rangos."""
+    for _, row in df_margenes.iterrows():
+        if row['Min'] <= costo <= row['Max']:
+            return row['Margen']
+    return 0.19  # Margen por defecto
 
-# Título de la aplicación
-st.title("📊 Cotizador de Equipos - Proservices")
+def generar_link_contacto(producto):
+    """Genera link de WhatsApp o email según el proveedor."""
+    contacto = producto['Contacto Vendedor']
+    if "WhatsApp" in str(producto.get('Forma de cotizar', '')):
+        numero = contacto.split('+')[-1].strip().replace(' ', '')
+        return f"https://wa.me/{numero}"
+    elif producto.get('Email', 'N/D') != 'N/D':
+        return f"mailto:{producto['Email']}"
+    return None
+
+# =================================================================================
+# INTERFAZ DE USUARIO (STREAMLIT)
+# =================================================================================
+st.title("📊 Cotizador Proservices 2024")
 st.markdown("---")
 
-# Sidebar para filtros
+# Sidebar: Filtros
 with st.sidebar:
     st.header("🔍 Filtros")
+    proveedor = st.selectbox("Proveedor", df_proveedores['Proveedor'].unique())
     
-    # 1. Combo box para seleccionar marca
-    marca_seleccionada = st.selectbox(
-        "1. Selecciona una marca",
-        options=sorted(df['Marca'].unique()),
-        key="marca"
-    )
+    # Filtros anidados
+    marcas = df_proveedores[df_proveedores['Proveedor'] == proveedor]['Marca'].unique()
+    marca = st.selectbox("Marca", marcas)
     
-    # 2. Combo box para seleccionar modelo (se actualiza según marca)
-    if marca_seleccionada:
-        modelos_disponibles = df[df['Marca'] == marca_seleccionada]['Línea de Producto'].unique()
-        modelo_seleccionado = st.selectbox(
-            "2. Selecciona un modelo",
-            options=sorted(modelos_disponibles),
-            key="modelo"
-        )
+    lineas = df_proveedores[(df_proveedores['Proveedor'] == proveedor) & 
+                           (df_proveedores['Marca'] == marca)]['Línea de Producto'].unique()
+    linea = st.selectbox("Línea de Producto", lineas)
+    
+    # Obtener producto seleccionado
+    producto = df_proveedores[
+        (df_proveedores['Proveedor'] == proveedor) & 
+        (df_proveedores['Marca'] == marca) & 
+        (df_proveedores['Línea de Producto'] == linea)
+    ].iloc[0].to_dict()
 
-# Mostrar información del producto seleccionado
-if marca_seleccionada and modelo_seleccionado:
-    producto = df[(df['Marca'] == marca_seleccionada) & 
-                 (df['Línea de Producto'] == modelo_seleccionado)].iloc[0].to_dict()
+# Sección principal
+st.subheader(f"📦 {producto['Marca']} - {producto['Línea de Producto']}")
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("### 📋 Especificaciones")
+    st.write(f"**Proveedor:** {producto['Proveedor']}")
+    st.write(f"**Modelo:** {producto['Modelo Base']}")
+    st.write(f"**Procedencia:** {producto['Procedencia']}")
+    st.write(f"**Garantía:** {producto['Garantía']}")
     
-    # Convertir a Series para manejo más fácil
-    producto = pd.Series(producto)
+    # Mostrar contacto (con link si es posible)
+    contacto_link = generar_link_contacto(producto)
+    if contacto_link:
+        st.markdown(f"**Contacto:** [📩 {producto['Contacto Vendedor']}]({contacto_link})")
+    else:
+        st.write(f"**Contacto:** {producto['Contacto Vendedor']}")
+
+with col2:
+    st.markdown("### 💵 Precios")
+    precio_lista = st.number_input("Precio de lista (CLP):", min_value=0, step=1000)
     
-    # 3. Mostrar proveedor
-    st.subheader(f"Proveedor: {producto['Proveedor']}")
-    
-    # Dividir en columnas para mejor organización
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        # 4-5. Instrucciones para buscar precio
-        st.markdown("### 📌 Buscar Precio")
+    if precio_lista > 0:
+        # Calcular descuentos
+        descuento_proveedor = producto['% Desc. Proveedor'] if isinstance(producto['% Desc. Proveedor'], (int, float)) else 0
+        precio_con_descuento = precio_lista * (1 - descuento_proveedor)
         
-        buscar_precio_en = producto.get('Buscar Precio en', producto.get('Forma de cotizar', 'N/D'))
-        
-        if buscar_precio_en == "N/D" or pd.isna(buscar_precio_en):
-            st.warning("⚠️ Contactar al vendedor para obtener precio")
-            st.write(f"**Contacto:** {producto['Contacto Vendedor']}")
-            st.write(f"**Email:** {producto['Email']}")
-            st.write(f"**Teléfono:** {producto.get('Teléfono Oficina/ Sino hay respuesta del vendedor', 'N/D')}")
+        # Descuento adicional para montos > 1.5M
+        if precio_con_descuento > 1_500_000 and producto.get('Descuento Extra > 1.5MM') == 'Sí':
+            descuento_extra = st.slider("Descuento adicional (%):", 0.0, 30.0, 5.0) / 100
+            precio_final = precio_con_descuento * (1 - descuento_extra)
         else:
-            st.success(f"🔍 Buscar precio en: **{buscar_precio_en}**")
-            web_proveedor = producto.get('Web/App proveedor', 'N/D')
-            if web_proveedor != 'N/D' and not pd.isna(web_proveedor):
-                st.markdown(f"🌐 [Acceder al sitio del proveedor]({web_proveedor})")
-            if 'Datos APP' in producto and not pd.isna(producto['Datos APP']):
-                st.info(f"🔑 Datos de acceso: {producto['Datos APP']}")
+            precio_final = precio_con_descuento
         
-        # 12. Garantía y procedencia
-        st.markdown("### 📝 Especificaciones")
-        st.write(f"**Garantía:** {producto['Garantía']}")
-        st.write(f"**Procedencia:** {producto['Procedencia']}")
+        # Calcular margen y precio de venta (CON NUEVOS MÁRGENES)
+        margen = calcular_margen(precio_final)
+        precio_venta = precio_final * (1 + margen)
         
-        # Mostrar modelo base si existe
-        if 'Modelo Base' in producto and not pd.isna(producto['Modelo Base']):
-            st.write(f"**Modelo:** {producto['Modelo Base']}")
-        elif 'Modelos / Descripción' in producto and not pd.isna(producto['Modelos / Descripción']):
-            st.write(f"**Modelos:** {producto['Modelos / Descripción']}")
-    
-    with col2:
-        # 6. Ingresar precio de lista
-        st.markdown("### 💵 Ingresar Precio")
-        precio_lista = st.number_input(
-            "Precio de lista ($):",
-            min_value=0.0,
-            step=1000.0,
-            key="precio_lista"
-        )
-        
-        # 6. Mostrar descuento del proveedor
-        descuento_proveedor = producto.get('% Desc. Proveedor', None)
-        
-        if descuento_proveedor is not None and not pd.isna(descuento_proveedor):
-            st.markdown(f"**Descuento del proveedor:** {descuento_proveedor*100:.2f}%")
-            
-            # Calcular precio con descuento base
-            precio_con_descuento = precio_lista * (1 - descuento_proveedor)
-            
-            # 7. Descuento adicional para montos > 1.5M
-            descuento_extra_disponible = producto.get('Descuento Extra > 1.5MM', 'No') == 'Sí'
-            
-            if precio_con_descuento > 1500000 and descuento_extra_disponible:
-                st.success("🎉 Puedes solicitar descuento adicional (compra > $1.5M)")
-                descuento_adicional = st.slider(
-                    "Descuento adicional (%):",
-                    min_value=0.0,
-                    max_value=30.0,
-                    value=5.0,
-                    step=0.5,
-                    key="descuento_extra"
-                ) / 100
-                
-                precio_final = precio_con_descuento * (1 - descuento_adicional)
-                descuento_total = 1 - ((1 - descuento_proveedor) * (1 - descuento_adicional))
-            else:
-                precio_final = precio_con_descuento
-                descuento_total = descuento_proveedor
-            
-            # Mostrar resultados
-            if precio_lista > 0:
-                st.markdown("### 📊 Resultados")
-                
-                # 8. Costo
-                st.write(f"**Costo:** ${precio_final:,.2f}")
-                
-                # 9. Margen de contribución
-                precio_venta = st.number_input(
-                    "Precio de venta al cliente ($):",
-                    min_value=0.0,
-                    value=precio_final * 1.2,  # 20% de margen por defecto
-                    step=1000.0,
-                    key="precio_venta"
-                )
-                
-                margen_valor = precio_venta - precio_final
-                margen_porcentaje = (margen_valor / precio_venta) * 100 if precio_venta > 0 else 0
-                
-                st.write(f"**Margen de contribución:** ${margen_valor:,.2f} ({margen_porcentaje:.2f}%)")
-                
-                # 10. Descuento a mostrar en cotización
-                descuento_cotizacion = (1 - (precio_venta / precio_lista)) * 100 if precio_lista > 0 else 0
-                st.write(f"**Descuento a aplicar en cotización:** {descuento_cotizacion:.2f}%")
-                
-                # 11. Precio de venta
-                st.success(f"**Precio final de venta:** ${precio_venta:,.2f}")
-        
-        else:
-            st.warning("Este proveedor requiere cotización directa con el vendedor")
+        # Mostrar resultados
+        st.success(f"**Precio final al proveedor:** ${precio_final:,.0f} CLP")
+        st.success(f"**Margen aplicado:** {margen*100:.1f}%")
+        st.success(f"**Precio de venta sugerido:** ${precio_venta:,.0f} CLP")
+
+# Gráfico de nuevos márgenes (sidebar)
+with st.sidebar:
+    st.markdown("### 📊 Márgenes 2024")
+    fig, ax = plt.subplots()
+    ax.bar(df_margenes['Tramo'], df_margenes['Margen']*100, color='#4CAF50')
+    plt.xticks(rotation=45, ha='right')
+    plt.ylabel("Margen (%)")
+    st.pyplot(fig)
 
 # Footer
 st.markdown("---")
-st.markdown("**Proservices** - Sistema de cotización de equipos")
+st.markdown(f"**Proservices** - © {datetime.now().year} | Versión con nuevos márgenes")
