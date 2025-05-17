@@ -637,7 +637,7 @@ def generar_link_contacto(producto):
 # =================================================================================
 # INTERFAZ DE USUARIO (STREAMLIT)
 # =================================================================================
-st.title("📊 Cotizador Proservices 2024")
+st.title("📊 Cotizador Grupo Proservices By Rodrigo Munoz")
 st.markdown("---")
 
 # Sidebar: Filtros
@@ -699,9 +699,20 @@ with col2:
         precio_venta = precio_final * (1 + margen)
         
         # Mostrar resultados
-        st.success(f"**Precio final al proveedor:** ${precio_final:,.0f} CLP")
-        st.success(f"**Margen aplicado:** {margen*100:.1f}%")
-        st.success(f"**Precio de venta sugerido:** ${precio_venta:,.0f} CLP")
+               # Mostrar resultados
+        st.markdown("### 🧾 Resumen de Cotización")
+
+        st.info(f"**Precio de lista (ingresado por el usuario):** ${precio_lista:,.0f} CLP")
+
+        st.success(f"**Costo del producto (con descuento proveedor):** ${precio_final:,.0f} CLP")
+
+        st.success(f"**Margen de ganancia Proservices aplicado:** {margen*100:.1f}%")
+
+        st.success(f"**Precio de venta sugerido (neto al cliente):** ${precio_venta:,.0f} CLP")
+
+        descuento_visible = 1 - (precio_venta / precio_lista)
+        st.success(f"**Descuento a mostrar en la cotización:** {descuento_visible*100:.2f}%")
+
 
 # Gráfico de nuevos márgenes (sidebar)
 with st.sidebar:
@@ -714,4 +725,4 @@ with st.sidebar:
 
 # Footer
 st.markdown("---")
-st.markdown(f"**Proservices** - © {datetime.now().year} | Versión con nuevos márgenes")
+st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices By Rodrigo Munoz")
