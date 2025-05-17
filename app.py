@@ -678,6 +678,15 @@ with col1:
     else:
         st.write(f"**Contacto:** {producto['Contacto Vendedor']}")
 
+    # Mostrar sitio web del proveedor (si existe)
+    if producto.get('Web/App proveedor') not in [None, '', 'N/D']:
+        st.markdown(f"🌐 **Sitio del proveedor:** [Abrir]({producto['Web/App proveedor']})")
+
+    # Mostrar datos de acceso (si existen)
+    if producto.get('Datos APP') not in [None, '', 'N/D']:
+        st.markdown(f"🔑 **Datos de acceso:** {producto['Datos APP']}")
+
+
 with col2:
     st.markdown("### 💵 Precios")
     precio_lista = st.number_input("Precio de lista (CLP):", min_value=0, step=1000)
@@ -699,19 +708,29 @@ with col2:
         precio_venta = precio_final * (1 + margen)
         
         # Mostrar resultados
-               # Mostrar resultados
+                 # Mostrar resumen de cotización con todos los datos solicitados
         st.markdown("### 🧾 Resumen de Cotización")
 
+        # Precio lista ingresado por usuario
         st.info(f"**Precio de lista (ingresado por el usuario):** ${precio_lista:,.0f} CLP")
 
+        # Descuento del proveedor
+        porcentaje_descuento_proveedor = producto['% Desc. Proveedor'] if isinstance(producto['% Desc. Proveedor'], (int, float)) else 0
+        st.info(f"**Porcentaje de descuento del proveedor:** {porcentaje_descuento_proveedor * 100:.2f}%")
+
+        # Costo real
         st.success(f"**Costo del producto (con descuento proveedor):** ${precio_final:,.0f} CLP")
 
+        # Margen aplicado
         st.success(f"**Margen de ganancia Proservices aplicado:** {margen*100:.1f}%")
 
+        # Precio de venta sugerido
         st.success(f"**Precio de venta sugerido (neto al cliente):** ${precio_venta:,.0f} CLP")
 
+        # Descuento al cliente visible
         descuento_visible = 1 - (precio_venta / precio_lista)
-        st.success(f"**Descuento a mostrar en la cotización:** {descuento_visible*100:.2f}%")
+        st.error(f"**Descuento a mostrar en la cotización:** {descuento_visible*100:.2f}%")
+      
 
 
 # Gráfico de nuevos márgenes (sidebar)
