@@ -702,13 +702,14 @@ with col2:
             precio_final = precio_con_descuento * (1 - descuento_extra)
         else:
             precio_final = precio_con_descuento
-        
-        # Calcular margen y precio de venta (CON NUEVOS MÁRGENES)
+
+        # Calcular margen real y precio de venta aplicando factor correcto
         margen = calcular_margen(precio_final)
-        precio_venta = precio_final * (1 + margen)
-        
-        # Mostrar resultados
-                 # Mostrar resumen de cotización con todos los datos solicitados
+        precio_venta = precio_final / (1 - margen)
+
+ 
+
+        # Mostrar resumen de cotización con todos los datos solicitados
         st.markdown("### 🧾 Resumen de Cotización")
 
         # Precio lista ingresado por usuario
@@ -730,18 +731,20 @@ with col2:
         # Descuento al cliente visible
         descuento_visible = 1 - (precio_venta / precio_lista)
         st.error(f"**Descuento a mostrar en la cotización:** {descuento_visible*100:.2f}%")
+
       
 
 
 # Gráfico de nuevos márgenes (sidebar)
 with st.sidebar:
     st.markdown("### 📊 Márgenes 2024")
-    fig, ax = plt.subplots()
-    ax.bar(df_margenes['Tramo'], df_margenes['Margen']*100, color='#4CAF50')
+    fig, ax = plt.subplots(figsize=(5, 3))
+    ax.bar(df_margenes['Tramo'], df_margenes['Margen'] * 100, color='#4CAF50')
+    ax.set_ylabel("Margen (%)")
     plt.xticks(rotation=45, ha='right')
-    plt.ylabel("Margen (%)")
+    plt.tight_layout()
     st.pyplot(fig)
 
 # Footer
 st.markdown("---")
-st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices By Rodrigo Munoz")
+st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices by Rodrigo Muñoz")
