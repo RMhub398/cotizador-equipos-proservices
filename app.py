@@ -14,13 +14,14 @@ st.set_page_config(
 # MATRIZ DE MÁRGENES ACTUALIZADA (2024)
 # =================================================================================
 MARGENES = [
-    {"Tramo": "$200.000 – $399.999", "Min": 200000, "Max": 399999, "Margen": 0.22},
-    {"Tramo": "$400.000 – $999.999", "Min": 400000, "Max": 999999, "Margen": 0.19},
-    {"Tramo": "$1.000.000 – $1.999.999", "Min": 1_000_000, "Max": 1_999_999, "Margen": 0.185},
-    {"Tramo": "$2.000.000 – $2.999.999", "Min": 2_000_000, "Max": 2_999_999, "Margen": 0.18},
-    {"Tramo": "$3.000.000 – $4.999.999", "Min": 3_000_000, "Max": 4_999_999, "Margen": 0.175},
-    {"Tramo": "SOBRE 5.000.000", "Min": 5_000_000, "Max": float("inf"), "Margen": 0.17}
+    {"Tramo": "$0 – $299.999", "Min": 0, "Max": 299999, "Margen": 0.22},
+    {"Tramo": "$300.000 – $999.999", "Min": 300000, "Max": 999999, "Margen": 0.19},
+    {"Tramo": "$1.000.000 – $1.999.999", "Min": 1000000, "Max": 1999999, "Margen": 0.185},
+    {"Tramo": "$2.000.000 – $2.999.999", "Min": 2000000, "Max": 2999999, "Margen": 0.18},
+    {"Tramo": "$3.000.000 – $4.999.999", "Min": 3000000, "Max": 4999999, "Margen": 0.175},
+    {"Tramo": "SOBRE 5.000.000", "Min": 5000000, "Max": float("inf"), "Margen": 0.17}
 ]
+
 
 # =================================================================================
 # DATOS COMPLETOS DE TODOS LOS PROVEEDORES (CON TODOS LOS MODELOS)
@@ -618,11 +619,12 @@ df_margenes = pd.DataFrame(MARGENES)
 # FUNCIONES PRINCIPALES
 # =================================================================================
 def calcular_margen(costo):
-    """Determina el margen basado en los nuevos rangos."""
-    for _, row in df_margenes.iterrows():
-        if row['Min'] <= costo <= row['Max']:
-            return row['Margen']
-    return 0.19  # Margen por defecto
+    """Devuelve el margen correspondiente al tramo de costo."""
+    for tramo in MARGENES:
+        if tramo["Min"] <= costo <= tramo["Max"]:
+            return tramo["Margen"]
+    return 0.22  # Margen por defecto de seguridad
+
 
 def generar_link_contacto(producto):
     """Genera link de WhatsApp o email según el proveedor."""
