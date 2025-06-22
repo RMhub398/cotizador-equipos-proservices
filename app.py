@@ -30,7 +30,7 @@ PROVEEDORES = [
 # LAS BRUJAS (EQUIPOS DE RIEGO) - Todos los modelos completos
 # =============================================
 {
-    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "PROPUMPS",
+    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "PROPUMPS VERTICAL",
     "Línea de Producto": "Bombas multietapas verticales inox AISI 304",
     "Modelo Base": "ECDLF", "Procedencia": "China", "% Desc. Proveedor": 0.43,
     "Forma de Pago": "Cheques 30 días", "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques",
@@ -66,7 +66,7 @@ PROVEEDORES = [
     "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: Bombas2024*"
 },
 {
-    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "PROPUMPS",
+    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "PROPUMPS HORIZONTAL",
     "Línea de Producto": "Bombas centrífugas, multietapas, drenaje",
     "Modelo Base": "HFT/DP/SCM/CM2", "Procedencia": "China", "% Desc. Proveedor": 0.36,
     "Forma de Pago": "Cheques 30 días", "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques",
@@ -607,6 +607,22 @@ PROVEEDORES = [
         "Stock": "Confirmar stock"
     },
 
+    # =============================================
+    # ESPA - Bombas y Equipos
+    # =============================================
+    {
+        "Proveedor": "ESPA", "Marca": "ESPA",
+        "Línea de Producto": "Bombas centrífugas, multietapas, presurización y riego",
+        "Modelo Base": "AQUACONTROL / MULTI / TECNOPRES / PRISMA", "Procedencia": "España", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 30 días", "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques",
+        "Garantía": "1 año", "Buscar Precio en": "Lista de precios interna ESPA", "Descuento Extra > 1.5MM": "No",
+        "Monto Activación": 0, "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "ESPA CHILE / +56 2 2903 8000",
+        "Email": "contacto@espachile.cl",
+        "Web": "https://www.espachile.cl",
+        "Datos APP": "Consultar lista de precios enviada por el proveedor"
+    },
+ 
     # =============================================
     # HCP (Todos los modelos completos)
     # =============================================
