@@ -14,19 +14,67 @@ st.set_page_config(
 # MATRIZ DE MÁRGENES ACTUALIZADA (2024)
 # =================================================================================
 MARGENES = [
-    {"Tramo": "$0 – $299.999", "Min": 0, "Max": 299999, "Margen": 0.22},
-    {"Tramo": "$300.000 – $999.999", "Min": 300000, "Max": 999999, "Margen": 0.19},
-    {"Tramo": "$1.000.000 – $1.999.999", "Min": 1000000, "Max": 1999999, "Margen": 0.185},
-    {"Tramo": "$2.000.000 – $2.999.999", "Min": 2000000, "Max": 2999999, "Margen": 0.18},
-    {"Tramo": "$3.000.000 – $4.999.999", "Min": 3000000, "Max": 4999999, "Margen": 0.175},
-    {"Tramo": "SOBRE 5.000.000", "Min": 5000000, "Max": float("inf"), "Margen": 0.17}
+    {"Tramo": "$200.000 – $399.999", "Min": 200000, "Max": 399999, "Margen": 0.22},
+    {"Tramo": "$400.000 – $999.999", "Min": 400000, "Max": 999999, "Margen": 0.19},
+    {"Tramo": "$1.000.000 – $1.999.999", "Min": 1_000_000, "Max": 1_999_999, "Margen": 0.185},
+    {"Tramo": "$2.000.000 – $2.999.999", "Min": 2_000_000, "Max": 2_999_999, "Margen": 0.18},
+    {"Tramo": "$3.000.000 – $4.999.999", "Min": 3_000_000, "Max": 4_999_999, "Margen": 0.175},
+    {"Tramo": "SOBRE 5.000.000", "Min": 5_000_000, "Max": float("inf"), "Margen": 0.17}
 ]
-
 
 # =================================================================================
 # DATOS COMPLETOS DE TODOS LOS PROVEEDORES (CON TODOS LOS MODELOS)
 # =================================================================================
 PROVEEDORES = [
+# =============================================
+    # LAS BRUJAS (EQUIPOS DE RIEGO)
+    # =============================================
+    {
+        "Proveedor": "LAS BRUJAS", "Marca": "PROPUMPS",
+        "Línea de Producto": "Bombas multietapa horizontal inox AISI 304",
+        "Modelo Base": "ECDLF", "Procedencia": "China", "% Desc. Proveedor": 0.43,
+        "Forma de Pago": "Cheques 30 días",
+        "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques",
+        "Garantía": "1 año", "Buscar Precio en": "App LAS BRUJAS",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil",
+        "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319437",
+        "Email": "comunicacionesodoo@equiposderiego.cl",
+        "Web/App proveedor": "https://b2b.pgic.cl",
+        "Teléfono Oficina": "+56 2 1234 5678",
+        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Verificar datos exactos con proveedor"
+    },
+    {
+        "Proveedor": "LAS BRUJAS", "Marca": "STAIRS",
+        "Línea de Producto": "Bombas sumergibles pozo profundo",
+        "Modelo Base": "6SP / 4ST / 8SP", "Procedencia": "China", "% Desc. Proveedor": 0.38,
+        "Forma de Pago": "Cheques 60 días",
+        "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques",
+        "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil",
+        "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319438",
+        "Email": "comunicacionesodoo@equiposderiego.cl",
+        "Web/App proveedor": "https://b2b.pgic.cl",
+        "Teléfono Oficina": "+56 2 1234 5678",
+        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Verificar datos exactos con proveedor"
+    },
+    {
+        "Proveedor": "LAS BRUJAS", "Marca": "STAIRS",
+        "Línea de Producto": "Bombas multietapa vertical inox AISI 304",
+        "Modelo Base": "SB / SBI", "Procedencia": "China", "% Desc. Proveedor": 0.40,
+        "Forma de Pago": "Cheques 60 días",
+        "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques",
+        "Garantía": "2 años", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles",
+        "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319439",
+        "Email": "comunicacionesodoo@equiposderiego.cl",
+        "Web/App proveedor": "https://b2b.pgic.cl",
+        "Teléfono Oficina": "+56 2 1234 5679",
+        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Verificar datos exactos con proveedor"
+    },
+
     # =============================================
     # PGIC (Todos los modelos completos)
     # =============================================
@@ -619,12 +667,11 @@ df_margenes = pd.DataFrame(MARGENES)
 # FUNCIONES PRINCIPALES
 # =================================================================================
 def calcular_margen(costo):
-    """Devuelve el margen correspondiente al tramo de costo."""
-    for tramo in MARGENES:
-        if tramo["Min"] <= costo <= tramo["Max"]:
-            return tramo["Margen"]
-    return 0.22  # Margen por defecto de seguridad
-
+    """Determina el margen basado en los nuevos rangos."""
+    for _, row in df_margenes.iterrows():
+        if row['Min'] <= costo <= row['Max']:
+            return row['Margen']
+    return 0.19  # Margen por defecto
 
 def generar_link_contacto(producto):
     """Genera link de WhatsApp o email según el proveedor."""
@@ -639,7 +686,7 @@ def generar_link_contacto(producto):
 # =================================================================================
 # INTERFAZ DE USUARIO (STREAMLIT)
 # =================================================================================
-st.title("📊 Cotizador Grupo Proservices By Rodrigo Munoz")
+st.title("📊 Cotizador Grupo Proservices By Rodrigo Muñoz")
 st.markdown("---")
 
 # Sidebar: Filtros
@@ -750,3 +797,4 @@ with st.sidebar:
 # Footer
 st.markdown("---")
 st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices by Rodrigo Muñoz")
+
