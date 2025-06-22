@@ -27,53 +27,56 @@ MARGENES = [
 # =================================================================================
 PROVEEDORES = [
 # =============================================
-    # LAS BRUJAS (EQUIPOS DE RIEGO)
-    # =============================================
-    {
-        "Proveedor": "LAS BRUJAS", "Marca": "PROPUMPS",
-        "Línea de Producto": "Bombas multietapa horizontal inox AISI 304",
-        "Modelo Base": "ECDLF", "Procedencia": "China", "% Desc. Proveedor": 0.43,
-        "Forma de Pago": "Cheques 30 días",
-        "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques",
-        "Garantía": "1 año", "Buscar Precio en": "App LAS BRUJAS",
-        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "1 día hábil",
-        "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319437",
-        "Email": "comunicacionesodoo@equiposderiego.cl",
-        "Web/App proveedor": "https://b2b.pgic.cl",
-        "Teléfono Oficina": "+56 2 1234 5678",
-        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Verificar datos exactos con proveedor"
-    },
-    {
-        "Proveedor": "LAS BRUJAS", "Marca": "STAIRS",
-        "Línea de Producto": "Bombas sumergibles pozo profundo",
-        "Modelo Base": "6SP / 4ST / 8SP", "Procedencia": "China", "% Desc. Proveedor": 0.38,
-        "Forma de Pago": "Cheques 60 días",
-        "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques",
-        "Garantía": "1 año", "Buscar Precio en": "App PGIC",
-        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "1 día hábil",
-        "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319438",
-        "Email": "comunicacionesodoo@equiposderiego.cl",
-        "Web/App proveedor": "https://b2b.pgic.cl",
-        "Teléfono Oficina": "+56 2 1234 5678",
-        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Verificar datos exactos con proveedor"
-    },
-    {
-        "Proveedor": "LAS BRUJAS", "Marca": "STAIRS",
-        "Línea de Producto": "Bombas multietapa vertical inox AISI 304",
-        "Modelo Base": "SB / SBI", "Procedencia": "China", "% Desc. Proveedor": 0.40,
-        "Forma de Pago": "Cheques 60 días",
-        "Condición de pago por monto": "sobre 1MM / 2 cheques / sobre 2MM 3 cheques",
-        "Garantía": "2 años", "Buscar Precio en": "App PGIC",
-        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles",
-        "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319439",
-        "Email": "comunicacionesodoo@equiposderiego.cl",
-        "Web/App proveedor": "https://b2b.pgic.cl",
-        "Teléfono Oficina": "+56 2 1234 5679",
-        "Datos APP": "Usuario: Kimberly / Clave: Operaciones24 / Verificar datos exactos con proveedor"
-    },
+# LAS BRUJAS (EQUIPOS DE RIEGO) - Todos los modelos completos
+# =============================================
+{
+    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "PROPUMPS",
+    "Línea de Producto": "Bombas multietapas verticales inox AISI 304",
+    "Modelo Base": "ECDLF", "Procedencia": "China", "% Desc. Proveedor": 0.43,
+    "Forma de Pago": "Cheques 30 días", "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques",
+    "Garantía": "1 año", "Buscar Precio en": "App LAS BRUJAS", "Descuento Extra > 1.5MM": "Sí",
+    "Monto Activación": 1500000, "Entrega con despacho": "1 día hábil",
+    "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319437",
+    "Email": "comunicacionesodoo@equiposderiego.cl",
+    "Web PGIC": "https://equiposderiego.b2bcarts.com/login",
+    "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: Bombas2024*"
+},
+{
+    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "VAREM",
+    "Línea de Producto": "Estanques hidroneumáticos", 
+    "Modelo Base": "VERTICAL / HORIZONTAL / 10BAR /16BAR", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+    "Forma de Pago": "Cheques 30 días", "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques",
+    "Garantía": "1 año", "Buscar Precio en": "App LAS BRUJAS", "Descuento Extra > 1.5MM": "Sí",
+    "Monto Activación": 1500000, "Entrega con despacho": "1 día hábil",
+    "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319440",
+    "Email": "comunicacionesodoo@equiposderiego.cl",
+    "Web PGIC": "https://equiposderiego.b2bcarts.com/login",
+    "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: Bombas2024*"
+},
+{
+    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "FORAS",
+    "Línea de Producto": "Bombas centrífugas, multietapas, drenaje",
+    "Modelo Base": "FV/FC/DC/NM/KB", "Procedencia": "Italia", "% Desc. Proveedor": 0.42,
+    "Forma de Pago": "Cheques 30 días", "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques",
+    "Garantía": "1 año", "Buscar Precio en": "App LAS BRUJAS", "Descuento Extra > 1.5MM": "Sí",
+    "Monto Activación": 1500000, "Entrega con despacho": "1 día hábil",
+    "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319441",
+    "Email": "comunicacionesodoo@equiposderiego.cl",
+    "Web PGIC": "https://equiposderiego.b2bcarts.com/login",
+    "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: Bombas2024*"
+},
+{
+    "Proveedor": "LAS BRUJAS (EQUIPOS DE RIEGO)", "Marca": "PROPUMPS",
+    "Línea de Producto": "Bombas centrífugas, multietapas, drenaje",
+    "Modelo Base": "HFT/DP/SCM/CM2", "Procedencia": "China", "% Desc. Proveedor": 0.36,
+    "Forma de Pago": "Cheques 30 días", "Condición de pago por monto": "sobre 1MM / 2 cheques/ sobre 2MM 3 cheques",
+    "Garantía": "1 año", "Buscar Precio en": "App LAS BRUJAS", "Descuento Extra > 1.5MM": "Sí",
+    "Monto Activación": 1500000, "Entrega con despacho": "1 día hábil",
+    "Contacto Vendedor": "JUAN CARLOS GUTIERREZ / +56 9 68319442",
+    "Email": "comunicacionesodoo@equiposderiego.cl",
+    "Web PGIC": "https://equiposderiego.b2bcarts.com/login",
+    "Datos APP": "Usuario: kgonzalez@grupoproservices.cl / Clave: Bombas2024*"
+},
 
     # =============================================
     # PGIC (Todos los modelos completos)
@@ -797,4 +800,5 @@ with st.sidebar:
 # Footer
 st.markdown("---")
 st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices by Rodrigo Muñoz")
+
 
