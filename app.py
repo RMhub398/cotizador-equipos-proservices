@@ -815,6 +815,6 @@ with st.sidebar:
 
 # Footer
 st.markdown("---")
-st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices by Rodrigo Muñoz")
+st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices by Rodrigo Muñoz 2025")
 
 
