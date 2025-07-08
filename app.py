@@ -14,7 +14,7 @@ st.set_page_config(
 # MATRIZ DE MÁRGENES ACTUALIZADA (2024)
 # =================================================================================
 MARGENES = [
-    {"Tramo": "$200.000 – $399.999", "Min": 200000, "Max": 399999, "Margen": 0.20},
+    {"Tramo": "$1 – $399.999", "Min": 1, "Max": 399999, "Margen": 0.20},
     {"Tramo": "$400.000 – $999.999", "Min": 400000, "Max": 999999, "Margen": 0.18},
     {"Tramo": "$1.000.000 – $1.999.999", "Min": 1_000_000, "Max": 1_999_999, "Margen": 0.175},
     {"Tramo": "$2.000.000 – $2.999.999", "Min": 2_000_000, "Max": 2_999_999, "Margen": 0.17},
@@ -687,10 +687,11 @@ df_margenes = pd.DataFrame(MARGENES)
 # =================================================================================
 def calcular_margen(costo):
     """Determina el margen basado en los nuevos rangos."""
+    costo = round(costo)  # 👈 redondea para que encaje bien en los tramos
     for _, row in df_margenes.iterrows():
         if row['Min'] <= costo <= row['Max']:
             return row['Margen']
-    return 0.19  # Margen por defecto
+    return df_margenes['Margen'].iloc[-1]  # 👈 usa el último margen como respaldo
 
 def generar_link_contacto(producto):
     """Genera link de WhatsApp o email según el proveedor."""
