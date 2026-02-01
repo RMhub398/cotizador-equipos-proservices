@@ -8,7 +8,7 @@ from datetime import datetime
 
 # Configuración de la página
 st.set_page_config(
-    page_title="Cotizador Proservices",
+    page_title="Cotizador Grupo Proservices 2026",
     page_icon="💰",
     layout="wide"
 )
