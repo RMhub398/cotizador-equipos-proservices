@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # =================================================================================
-# MATRIZ DE MÁRGENES ACTUALIZADA (2024)
+# MATRIZ DE MÁRGENES ACTUALIZADA (2026)
 # =================================================================================
 MARGENES = [
     {"Tramo": "$1 – $299.999", "Min": 1, "Max": 299000, "Margen": 0.22},
@@ -809,7 +809,7 @@ with col2:
 
 # Gráfico de nuevos márgenes (sidebar)
 with st.sidebar:
-    st.markdown("### 📊 Márgenes 2024")
+    st.markdown("### 📊 Márgenes 2026")
     fig, ax = plt.subplots(figsize=(5, 3))
     ax.bar(df_margenes['Tramo'], df_margenes['Margen'] * 100, color='#4CAF50')
     ax.set_ylabel("Margen (%)")
@@ -819,6 +819,6 @@ with st.sidebar:
 
 # Footer
 st.markdown("---")
-st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices by Rodrigo Muñoz 2025")
+st.markdown(f"**Proservices** - © {datetime.now().year} | Versión GrupoProservices by Rodrigo Muñoz 2026")
 
 
