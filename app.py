@@ -17,7 +17,7 @@ st.set_page_config(
 # MATRIZ DE MÁRGENES ACTUALIZADA (2026)
 # =================================================================================
 MARGENES = [
-    {"Tramo": "$1 – $299.999", "Min": 1, "Max": 299000, "Margen": 0.22},
+    {"Tramo": "$1 – $299.999", "Min": 1, "Max": 299999, "Margen": 0.22},
     {"Tramo": "$300.000 – $999.999", "Min": 300000, "Max": 999999, "Margen": 0.185},
     {"Tramo": "$1.000.000 – $1.999.999", "Min": 1_000_000, "Max": 1_999_999, "Margen": 0.18},
     {"Tramo": "$2.000.000 – $2.999.999", "Min": 2_000_000, "Max": 2_999_999, "Margen": 0.175},
@@ -107,7 +107,7 @@ PROVEEDORES = [
     {
         "Proveedor": "PGIC", "Marca": "STAIRS", 
         "Línea de Producto": "Bombas multietapa vertical inox AISI 304",
-        "Modelo Base": "SB / SBI", "Procedencia": "China", "% Desc. Proveedor": 0.40,
+        "Modelo Base": "SB / SBI", "Procedencia": "China", "% Desc. Proveedor": 0.43,
         "Forma de Pago": "Cheques 60 días", "Garantía": "2 años", "Buscar Precio en": "App PGIC",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
         "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0190"
@@ -123,7 +123,7 @@ PROVEEDORES = [
     {
         "Proveedor": "PGIC", "Marca": "MEUDY", 
         "Línea de Producto": "Bombas sumergibles para lodo / contratistas",
-        "Modelo Base": "FSM/ KSM /KBZ /KBS/ KBD", "Procedencia": "China", "% Desc. Proveedor": 0.35,
+        "Modelo Base": "FSM/ KSM /KBZ /KBS/ KBD", "Procedencia": "China", "% Desc. Proveedor": 0.38,
         "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
         "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
@@ -139,7 +139,7 @@ PROVEEDORES = [
     {
         "Proveedor": "PGIC", "Marca": "BESTFLOW", 
         "Línea de Producto": "Bombas de pozo / superficie / Variadores y tableros eléctricos",
-        "Modelo Base": "VFD / TBF / STAR", "Procedencia": "China", "% Desc. Proveedor": 0.35,
+        "Modelo Base": "VFD / TBF / STAR", "Procedencia": "China", "% Desc. Proveedor": 0.38,
         "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
         "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
@@ -155,7 +155,7 @@ PROVEEDORES = [
     {
         "Proveedor": "PGIC", "Marca": "FRANKLIN", 
         "Línea de Producto": "Motores sumergibles y bombas STAIRS by Franklin",
-        "Modelo Base": "4FM / 6FM", "Procedencia": "EE.UU.", "% Desc. Proveedor": 0.35,
+        "Modelo Base": "4FM / 6FM", "Procedencia": "EE.UU.", "% Desc. Proveedor": 0.38,
         "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
         "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
@@ -178,8 +178,16 @@ PROVEEDORES = [
     },
     {
         "Proveedor": "PGIC", "Marca": "ULMAX", 
-        "Línea de Producto": "Bombas verticales multietapas / Variadores de frecuencia",
-        "Modelo Base": "UX / SVMT", "Procedencia": "China", "% Desc. Proveedor": 0.40,
+        "Línea de Producto": "Bombas verticales multietapas",
+        "Modelo Base": "SVMT", "Procedencia": "China", "% Desc. Proveedor": 0.48,
+        "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
+    },
+    {
+        "Proveedor": "PGIC", "Marca": "ULMAX", 
+        "Línea de Producto": "Variadores de frecuencia",
+        "Modelo Base": "UX", "Procedencia": "China", "% Desc. Proveedor": 0.42,
         "Forma de Pago": "Cheques 60 días", "Garantía": "1 año", "Buscar Precio en": "App PGIC",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
         "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
@@ -195,7 +203,7 @@ PROVEEDORES = [
     {
         "Proveedor": "PGIC", "Marca": "REGGIO", 
         "Línea de Producto": "Bombas centrífugas Normalizadas",
-        "Modelo Base": "SN", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
+        "Modelo Base": "SN", "Procedencia": "Italia", "% Desc. Proveedor": 0.50,
         "Forma de Pago": "Cheques 60 días", "Garantía": "2 años", "Buscar Precio en": "App PGIC",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
         "Entrega con despacho": "1 día hábil", "Contacto Vendedor": "Valeska Canales / +56 9 6206 0189"
@@ -207,83 +215,121 @@ PROVEEDORES = [
     {
         "Proveedor": "KOSLAN", "Marca": "PEDROLLO", 
         "Línea de Producto": "Bombas superficie",
-        "Modelo Base": "CPM / CP / 2CPM / HF / F", "Procedencia": "Italia", "% Desc. Proveedor": 0.43,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
+        "Modelo Base": "CPM / CP / 2CPM / HF / F", "Procedencia": "Italia", "% Desc. Proveedor": 0.45,
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
-        "Email": "vcampos@koslan.cl", "Web/App proveedor": "https://wap.koslan.cl/index.php",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8608",
+        "Email": "smartinez@koslan.cl", "Web/App proveedor": "https://wap.koslan.cl/index.php",
         "Datos APP": "ID Cliente: 1739"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "PEDROLLO", 
         "Línea de Producto": "Bombas sumergible / pozo / aguas servidas / drenaje",
-        "Modelo Base": "4SR /4BLOCK /VX /MC", "Procedencia": "Italia", "% Desc. Proveedor": 0.46,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
+        "Modelo Base": "4SR /4BLOCK /VX /MC", "Procedencia": "Italia", "% Desc. Proveedor": 0.48,
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594"
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8609",
+        "Email": "smartinez@koslan.cl"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "PEDROLLO", 
         "Línea de Producto": "Variadores y tableros eléctricos",
         "Modelo Base": "Serie E1 / E2", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "3 años", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8610",
+        "Email": "smartinez@koslan.cl",
         "Datos APP": "Arrancadores y tableros configurables"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "FLOWMAK", 
         "Línea de Producto": "Bombas agrícolas, periféricas y sumergibles/ válvulas",
         "Modelo Base": "VARIOS", "Procedencia": "China", "% Desc. Proveedor": 0.38,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8611",
+        "Email": "smartinez@koslan.cl",
         "Datos APP": "Uso agrícola y domiciliario"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "MAC3", 
+        "Línea de Producto": "Sensores de nivel",
+        "Modelo Base": "VARIOS", "Procedencia": "EE.UU.", "% Desc. Proveedor": 0.47,
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8612",
+        "Email": "smartinez@koslan.cl", "Web/App proveedor": "https://wap.koslan.cl/index.php",
+        "Datos APP": "Control de nivel"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "RAIN", 
         "Línea de Producto": "Válvulas solenoides, programadores",
         "Modelo Base": "VARIOS", "Procedencia": "EE.UU.", "% Desc. Proveedor": 0.40,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8612",
+        "Email": "smartinez@koslan.cl",
         "Datos APP": "Controladores de riego y electroválvulas"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "KOSLAN", 
         "Línea de Producto": "Tableros eléctricos electronicos",
         "Modelo Base": "DOMINO / SIMPLEX / DUPLEX", "Procedencia": "Chile", "% Desc. Proveedor": 0.38,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8613",
+        "Email": "smartinez@koslan.cl",
         "Datos APP": "Tableros armados a medida"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "ZENIT", 
         "Línea de Producto": "Bombas aguas servidas industriales",
-        "Modelo Base": "GRBLUE / GRS /GRG / AP / UNIQA", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
+        "Modelo Base": "GRBLUE / GRS /GRG / AP / UNIQA", "Procedencia": "Italia", "% Desc. Proveedor": 0.45,
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8614",
+        "Email": "smartinez@koslan.cl",
         "Datos APP": "Bombas trituradoras y de canal abierto"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "VAREM", 
         "Línea de Producto": "Estanques hidroneumáticos",
         "Modelo Base": "VERTICAL / HORIZONTAL / 10BAR /16BAR", "Procedencia": "Italia", "% Desc. Proveedor": 0.40,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "1 año", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8615",
+        "Email": "smartinez@koslan.cl",
         "Datos APP": "Estanques verticales y horizontales certificados"
     },
     {
         "Proveedor": "KOSLAN", "Marca": "LEO", 
-        "Línea de Producto": "Bombas sumergibles y de superficie, bombas solares/ variadores de frecuencia",
-        "Modelo Base": "LVS / LPP /PQ /3ACM /2ACM /AMS", "Procedencia": "China", "% Desc. Proveedor": 0.43,
-        "Forma de Pago": "CUENTA CORRIENTE", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
+        "Línea de Producto": "Bombas superficie y bombas solares",
+        "Modelo Base": "LVS / LPP /PQ /3ACM /2ACM /AMS", "Procedencia": "China", "% Desc. Proveedor": 0.45,
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
         "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
-        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Vicente Campos / +56 9 8230 1594",
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8616",
+        "Email": "smartinez@koslan.cl", "Web/App proveedor": "https://wap.koslan.cl/index.php",
         "Datos APP": "Uso residencial y riego simple"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "LEO", 
+        "Línea de Producto": "Variadores de frecuencia",
+        "Modelo Base": "PDH30", "Procedencia": "China", "% Desc. Proveedor": 0.48,
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8616",
+        "Email": "smartinez@koslan.cl", "Web/App proveedor": "https://wap.koslan.cl/index.php",
+        "Datos APP": "Variador de frecuencia PDH30"
+    },
+    {
+        "Proveedor": "KOSLAN", "Marca": "LEO", 
+        "Línea de Producto": "Bombas sumergibles",
+        "Modelo Base": "LVS / LPP /PQ /3ACM /2ACM /AMS", "Procedencia": "China", "% Desc. Proveedor": 0.47,
+        "Forma de Pago": "Transferencia", "Condición de pago por monto": "contado", "Garantía": "2 años", "Buscar Precio en": "App Koslan",
+        "Descuento Extra > 1.5MM": "Sí", "Monto Activación": 1500000,
+        "Entrega con despacho": "2 días hábiles", "Contacto Vendedor": "Smith Martinez / +56 9 3433 8616",
+        "Email": "smartinez@koslan.cl", "Web/App proveedor": "https://wap.koslan.cl/index.php",
+        "Datos APP": "Bombas sumergibles"
     },
 
     # =============================================
@@ -696,14 +742,28 @@ def calcular_margen(costo):
             return row['Margen']
     return df_margenes['Margen'].iloc[-1]  # 👈 usa el último margen como respaldo
 
+def valor_valido(valor):
+    """Retorna True si el dato existe y no es NaN/N/D."""
+    return pd.notna(valor) and str(valor).strip() not in ["", "N/D", "nan", "None"]
+
 def generar_link_contacto(producto):
     """Genera link de WhatsApp o email según el proveedor."""
-    contacto = producto['Contacto Vendedor']
-    if "WhatsApp" in str(producto.get('Forma de cotizar', '')):
-        numero = contacto.split('+')[-1].strip().replace(' ', '')
+    contacto = producto.get('Contacto Vendedor', '')
+    forma_cotizar = producto.get('Forma de cotizar', '')
+
+    if valor_valido(contacto) and "WhatsApp" in str(forma_cotizar):
+        numero = str(contacto).split('+')[-1].strip().replace(' ', '')
         return f"https://wa.me/{numero}"
-    elif producto.get('Email', 'N/D') != 'N/D':
+    elif valor_valido(producto.get('Email')):
         return f"mailto:{producto['Email']}"
+    return None
+
+def obtener_web(producto):
+    """Busca la web aunque el proveedor use distintas claves en la matriz."""
+    for campo in ['Web/App proveedor', 'Web PGIC', 'Web']:
+        valor = producto.get(campo)
+        if valor_valido(valor):
+            return valor
     return None
 
 # =================================================================================
@@ -725,12 +785,22 @@ with st.sidebar:
                            (df_proveedores['Marca'] == marca)]['Línea de Producto'].unique()
     linea = st.selectbox("Línea de Producto", lineas)
     
-    # Obtener producto seleccionado
-    producto = df_proveedores[
+    # Obtener productos que coinciden con proveedor, marca y línea
+    productos_filtrados = df_proveedores[
         (df_proveedores['Proveedor'] == proveedor) & 
         (df_proveedores['Marca'] == marca) & 
         (df_proveedores['Línea de Producto'] == linea)
-    ].iloc[0].to_dict()
+    ]
+
+    # Si hay más de un modelo dentro de la misma línea, permitir seleccionarlo
+    if len(productos_filtrados) > 1:
+        modelos = productos_filtrados['Modelo Base'].fillna('Sin modelo definido').astype(str).tolist()
+        modelo_seleccionado = st.selectbox("Modelo / Serie", modelos)
+        producto = productos_filtrados[
+            productos_filtrados['Modelo Base'].fillna('Sin modelo definido').astype(str) == modelo_seleccionado
+        ].iloc[0].to_dict()
+    else:
+        producto = productos_filtrados.iloc[0].to_dict()
 
 # Sección principal
 st.subheader(f"📦 {producto['Marca']} - {producto['Línea de Producto']}")
@@ -751,11 +821,12 @@ with col1:
         st.write(f"**Contacto:** {producto['Contacto Vendedor']}")
 
     # Mostrar sitio web del proveedor (si existe)
-    if producto.get('Web/App proveedor') not in [None, '', 'N/D']:
-        st.markdown(f"🌐 **Sitio del proveedor:** [Abrir]({producto['Web/App proveedor']})")
+    web_proveedor = obtener_web(producto)
+    if web_proveedor:
+        st.markdown(f"🌐 **Sitio del proveedor:** [Abrir]({web_proveedor})")
 
     # Mostrar datos de acceso (si existen)
-    if producto.get('Datos APP') not in [None, '', 'N/D']:
+    if valor_valido(producto.get('Datos APP')):
         st.markdown(f"🔑 **Datos de acceso:** {producto['Datos APP']}")
 
 
@@ -765,18 +836,15 @@ with col2:
     
     if precio_lista > 0:
         # Calcular descuentos
-        descuento_proveedor = producto['% Desc. Proveedor'] if isinstance(producto['% Desc. Proveedor'], (int, float)) else 0
+        descuento_es_numerico = isinstance(producto['% Desc. Proveedor'], (int, float)) and pd.notna(producto['% Desc. Proveedor'])
+        descuento_proveedor = float(producto['% Desc. Proveedor']) if descuento_es_numerico else 0
         precio_con_descuento = precio_lista * (1 - descuento_proveedor)
         
-        # Descuento adicional para montos > 1.5M
-        if precio_con_descuento > 1_500_000 and producto.get('Descuento Extra > 1.5MM') == 'Sí':
-            descuento_extra = st.slider("Descuento adicional (%):", 0.0, 30.0, 5.0) / 100
-            precio_final = precio_con_descuento * (1 - descuento_extra)
-        else:
-            precio_final = precio_con_descuento
+        # Costo final: se aplica únicamente el descuento normal del proveedor
+        precio_final = precio_con_descuento
 
         # Calcular margen real y precio de venta aplicando factor correcto
-        margen = calcular_margen(precio_final)
+        margen = calcular_margen(precio_lista)
         precio_venta = precio_final / (1 - margen)
 
  
@@ -788,8 +856,10 @@ with col2:
         st.info(f"**Precio de lista (ingresado por el usuario):** ${precio_lista:,.0f} CLP")
 
         # Descuento del proveedor
-        porcentaje_descuento_proveedor = producto['% Desc. Proveedor'] if isinstance(producto['% Desc. Proveedor'], (int, float)) else 0
-        st.info(f"**Porcentaje de descuento del proveedor:** {porcentaje_descuento_proveedor * 100:.2f}%")
+        if descuento_es_numerico:
+            st.info(f"**Porcentaje de descuento del proveedor:** {descuento_proveedor * 100:.2f}%")
+        else:
+            st.warning("**Descuento del proveedor:** Cotizar valor final con vendedor (no se aplica descuento automático).")
 
         # Costo real
         st.success(f"**Costo del producto (con descuento proveedor):** ${precio_final:,.0f} CLP")
